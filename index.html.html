@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informatika MTs: Himpunan Data & Tipe Data Dasar</title>
+    
+    <style>
+        /* CSS Variables untuk Tema Hijau Madrasah (100% Offline) */
+        :root {
+            --primary: #16a34a;       /* Hijau Utama */
+            --primary-dark: #14532d;  /* Hijau Tua */
+            --primary-hover: #15803d; /* Hijau Hover */
+            --primary-light: #dcfce7; /* Hijau Muda */
+            --bg-color: #f0fdf4;      /* Latar Belakang */
+            --text-main: #1f2937;     /* Teks Gelap */
+            --text-muted: #4b5563;    /* Teks Abu-abu */
+            --white: #ffffff;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --accent-blue: #3b82f6;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+            --radius-full: 9999px;
+        }
+
+        /* Base & Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Utilities */
+        .container { max-width: 1024px; margin: 0 auto; padding: 0 20px; width: 100%; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: bold; }
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .grid { display: grid; }
+        .mt-4 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+
+        /* Typography */
+        h1, h2, h3 { color: var(--primary-dark); line-height: 1.2; }
+        h1 { font-size: 1.5rem; }
+        h2 { font-size: 2rem; margin-bottom: 1rem; }
+        h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; }
+        code { background: var(--primary-light); padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; color: var(--primary-dark); font-weight: bold;}
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { background: var(--white); padding: 5px; border-radius: 50%; display: flex; }
+        
+        nav { display: flex; gap: 10px; }
+        .nav-btn {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid transparent;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover { background-color: rgba(255,255,255,0.1); }
+        .nav-btn.active { background-color: var(--primary); border-color: var(--primary-light); }
+
+        /* Main Content Area */
+        main { flex-grow: 1; padding: 2rem 0; }
+        .section-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border-top: 6px solid var(--primary);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Grid Layouts */
+        .materi-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media(min-width: 768px) {
+            .materi-grid { grid-template-columns: 1.5fr 1fr; }
+            .eksplorasi-grid { grid-template-columns: 300px 1fr; }
+        }
+
+        /* Type Cards */
+        .type-card {
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            border-left: 5px solid;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .type-string { background: #eff6ff; border-color: #3b82f6; }
+        .type-int { background: #fef2f2; border-color: #ef4444; }
+        .type-float { background: #fffbeb; border-color: #f59e0b; }
+        .type-bool { background: #f5f3ff; border-color: #8b5cf6; }
+        .type-icon { font-size: 1.5rem; }
+
+        /* Data Table Explorer */
+        .eksplorasi-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr;
+        }
+        .control-panel {
+            background: var(--gray-100);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+        }
+        .control-group { margin-bottom: 1.5rem; }
+        .control-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        input[type="checkbox"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            accent-color: var(--primary);
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            box-shadow: 0 0 0 1px var(--gray-200);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        th {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+        th:hover { background-color: #bbf7d0; }
+        th .type-badge {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+        th .sort-icon {
+            display: inline-block;
+            margin-left: 5px;
+            width: 12px; height: 12px;
+            opacity: 0.5;
+        }
+        tr:hover { background-color: var(--bg-color); }
+        .bool-true { color: var(--primary-dark); font-weight: bold; background: var(--primary-light); padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block;}
+        .bool-false { color: var(--accent-red); font-weight: bold; background: #fee2e2; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block;}
+
+        /* Feedback Panel */
+        .feedback-panel {
+            background: var(--white);
+            border: 2px solid var(--primary);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .feedback-avatar {
+            width: 50px; height: 50px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* Quiz Styles */
+        .quiz-progress-bar {
+            width: 100%; height: 10px;
+            background: var(--gray-200);
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .quiz-progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .option-btn {
+            display: block; width: 100%; text-align: left;
+            padding: 1rem; margin-bottom: 0.5rem;
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 1rem; transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-color); }
+        .option-btn.correct { border-color: var(--primary); background: var(--primary-light); }
+        .option-btn.wrong { border-color: var(--accent-red); background: #fef2f2; }
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+        
+        .action-btn {
+            background: var(--primary); color: var(--white);
+            border: none; padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-full);
+            font-weight: bold; cursor: pointer;
+            transition: background 0.2s; font-size: 1rem;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .action-btn:hover { background: var(--primary-hover); }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-bounce { animation: bounce 2s infinite; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(0); }
+        }
+
+        /* Mobile Nav Toggle */
+        .mobile-toggle {
+            display: none; background: none; border: none; color: white; cursor: pointer;
+        }
+        @media(max-width: 768px) {
+            nav { display: none; flex-direction: column; width: 100%; position: absolute; top: 100%; left: 0; background: var(--primary-dark); padding: 1rem; }
+            nav.show { display: flex; }
+            .mobile-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <!-- Inline SVG Ikon Buku/Data -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14532d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </div>
+                <div>
+                    <h1 style="font-size: 1.2rem; color: white; margin:0;">Informatika MTs Kelas VII</h1>
+                    <div style="font-size: 0.8rem; color: var(--primary-light);">Fase D - Provinsi Gorontalo</div>
+                </div>
+            </div>
+            <button class="mobile-toggle" onclick="toggleMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <nav id="main-nav">
+                <button class="nav-btn active" onclick="switchTab('materi')" id="btn-materi">1. Materi</button>
+                <button class="nav-btn" onclick="switchTab('eksplorasi')" id="btn-eksplorasi">2. Eksplorasi Data</button>
+                <button class="nav-btn" onclick="switchTab('kuis')" id="btn-kuis">3. Kuis Evaluasi</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- SECTION: MATERI -->
+        <section id="sec-materi" class="section-card">
+            <div class="text-center mb-6">
+                <span style="background: var(--primary-light); color: var(--primary-dark); padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; letter-spacing: 1px;">MODUL INFORMATIKA</span>
+                <h2 class="mt-4">Memahami Himpunan Data & Tipe Data Dasar</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+                    Mari belajar bagaimana komputer mengelompokkan informasi. Kita akan menggunakan contoh nyata dari hasil bumi Gorontalo, yaitu <strong>Jagung (Binthe)</strong>.
+                </p>
+            </div>
+
+            <div class="materi-grid">
+                <div>
+                    <h3>1. Struktur Himpunan Data (Data Set)</h3>
+                    <p>Himpunan data adalah kumpulan informasi yang disusun secara terstruktur agar mudah dibaca komputer. Biasanya berbentuk tabel.</p>
+                    <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-muted);">
+                        <li><strong>Kolom (Field):</strong> Kategori informasi yang menurun ke bawah (contoh: Kolom Nama, Kolom Luas).</li>
+                        <li><strong>Baris (Record):</strong> Satu kumpulan data utuh mendatar (contoh: Data Kelompok Tani A dari kiri ke kanan).</li>
+                    </ul>
+
+                    <h3 class="mt-4">2. Tipe Data Dasar</h3>
+                    <p>Komputer harus mengenali "jenis" isi setiap kolom agar bisa memprosesnya (misal: tulisan tidak bisa dikalikan dengan angka).</p>
+                    
+                    <div class="type-card type-string">
+                        <div class="type-icon">🔤</div>
+                        <div>
+                            <strong style="color: #1e3a8a;">Teks (String)</strong>
+                            <p style="margin: 0; font-size: 0.9rem;">Berisi huruf, kata, atau kalimat. <br>Contoh: <code>"Kabupaten Bone Bolango"</code>, <code>"Jagung Manis"</code>.</p>
+                        </div>
+                    </div>
+                    <div class="type-card type-int">
+                        <div class="type-icon">🔢</div>
+                        <div>
+                            <strong style="color: #991b1b;">Bilangan Bulat (Integer)</strong>
+                            <p style="margin: 0; font-size: 0.9rem;">Angka utuh tanpa koma. Digunakan untuk menghitung jumlah benda yang utuh.<br>Contoh: <code>150</code> (jumlah karung jagung), <code>5</code> (nomor urut).</p>
+                        </div>
+                    </div>
+                    <div class="type-card type-float">
+                        <div class="type-icon">📏</div>
+                        <div>
+                            <strong style="color: #92400e;">Bilangan Desimal (Float/Real)</strong>
+                            <p style="margin: 0; font-size: 0.9rem;">Angka yang memiliki koma/pecahan untuk pengukuran presisi.<br>Contoh: <code>12.5</code> (luas lahan dalam Hektar).</p>
+                        </div>
+                    </div>
+                    <div class="type-card type-bool">
+                        <div class="type-icon">✅</div>
+                        <div>
+                            <strong style="color: #4c1d95;">Logika (Boolean)</strong>
+                            <p style="margin: 0; font-size: 0.9rem;">Hanya memiliki 2 kemungkinan nilai: <strong>Benar (True)</strong> atau <strong>Salah (False)</strong>.<br>Contoh: Memenuhi Target Ekspor? <code>True</code> / <code>False</code>.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--primary-light); padding: 1.5rem; border-radius: var(--radius-lg); text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div style="background: white; padding: 2rem; border-radius: 50%; box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+                        <!-- Inline SVG Corn icon -->
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="#f59e0b" stroke="#d97706" stroke-width="2"><path d="M12 2C7 2 3 7 3 12c0 2 .5 4 1.5 5.5L7 22l5-5 5 5 2.5-4.5C20.5 16 21 14 21 12c0-5-4-10-9-10z"></path></svg>
+                    </div>
+                    <h3 style="color: var(--primary-dark);">Siap Memanipulasi Data?</h3>
+                    <p style="color: var(--primary-dark); font-size: 0.9rem;">Di halaman eksplorasi, kamu bisa menyaring (filtering) dan mengurutkan (sorting) Data Panen Jagung Madrasah se-Provinsi Gorontalo secara langsung!</p>
+                    <button class="action-btn animate-bounce mt-4" onclick="switchTab('eksplorasi')">
+                        Mulai Eksplorasi
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: EKSPLORASI -->
+        <section id="sec-eksplorasi" class="section-card hidden">
+            <h2>Simulasi Data Panen Jagung MTs</h2>
+            <p style="color: var(--text-muted);">Tabel di bawah adalah <strong>Himpunan Data</strong>. Coba gunakan kontrol di sebelah kiri untuk <em>menyaring (Filtering)</em> atau klik judul kolom tabel untuk <em>mengurutkan (Sorting)</em>.</p>
+            
+            <div class="eksplorasi-grid mt-4">
+                <!-- Panel Kontrol (Filter) -->
+                <div class="control-panel">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        Panel Filter Data
+                    </h3>
+                    <hr style="border:0; border-top:1px solid var(--gray-300); margin: 10px 0 20px;">
+                    
+                    <div class="control-group">
+                        <label for="filter-panen">Luas Lahan (Float) > <span id="panen-val" style="color: var(--primary);">0</span> Hektar</label>
+                        <input type="range" id="filter-panen" min="0" max="25" step="0.5" value="0">
+                        <div class="flex justify-between mt-2" style="font-size: 0.8rem; color: var(--text-muted);">
+                            <span>0 Ha</span>
+                            <span>25 Ha</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="background: white; padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--accent-blue);">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="filter-unggulan">
+                            Tampilkan Hanya Bibit Unggul (Boolean: True)
+                        </label>
+                    </div>
+
+                    <button class="action-btn" style="width: 100%; justify-content: center; background-color: var(--text-muted);" onclick="resetData()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+                        Reset Data
+                    </button>
+                </div>
+
+                <!-- Visualisasi Data (Tabel) -->
+                <div>
+                    <div class="table-container">
+                        <table id="data-table">
+                            <thead>
+                                <tr>
+                                    <th onclick="handleSort('id', 'Integer')" title="Klik untuk urutkan">
+                                        ID
+                                        <span class="type-badge">Integer</span>
+                                        <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                                    </th>
+                                    <th onclick="handleSort('wilayah', 'String')" title="Klik untuk urutkan">
+                                        Wilayah MTs
+                                        <span class="type-badge">String</span>
+                                        <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                                    </th>
+                                    <th onclick="handleSort('luas', 'Float')" title="Klik untuk urutkan">
+                                        Luas (Ha)
+                                        <span class="type-badge">Float</span>
+                                        <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                                    </th>
+                                    <th onclick="handleSort('panen', 'Integer')" title="Klik untuk urutkan">
+                                        Panen (Karung)
+                                        <span class="type-badge">Integer</span>
+                                        <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                                    </th>
+                                    <th onclick="handleSort('unggul', 'Boolean')" title="Klik untuk urutkan">
+                                        Bibit Unggul
+                                        <span class="type-badge">Boolean</span>
+                                        <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <!-- Data akan dirender oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Panel Feedback Edukatif Edu-Bot -->
+                    <div class="feedback-panel">
+                        <div class="feedback-avatar">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--primary-dark)" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path><path d="M4 10h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10z"></path><circle cx="9" cy="15" r="1"></circle><circle cx="15" cy="15" r="1"></circle></svg>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 2px; color: var(--primary-dark);">Respon Edukatif:</h4>
+                            <p id="feedback-text" style="margin: 0; font-size: 0.95rem;">Selamat datang! Tabel memuat 5 baris data (records). Silakan geser slider luas lahan (Float) atau klik judul kolom untuk melakukan penyaringan (filtering) dan pengurutan (sorting).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-6 pt-4" style="border-top: 1px solid var(--gray-200);">
+                <button class="action-btn" onclick="switchTab('kuis')">
+                    Lanjut ke Kuis
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION: KUIS -->
+        <section id="sec-kuis" class="section-card hidden" style="max-width: 800px; margin: 0 auto;">
+            <div class="text-center mb-6">
+                <h2>Evaluasi Pemahaman</h2>
+                <p style="color: var(--text-muted);">Uji pemahamanmu tentang himpunan data, tipe data, pengurutan, dan penyaringan.</p>
+            </div>
+
+            <!-- FORM IDENTITAS -->
+            <div id="identitas-container" style="background: var(--white); padding: 2rem; border-radius: var(--radius-lg); border: 2px solid var(--primary-light); margin-bottom: 2rem;">
+                <h3 style="color: var(--primary-dark); margin-bottom: 1rem;">Isi Identitas Sebelum Memulai</h3>
+                <div class="control-group">
+                    <label style="display: block; font-weight: bold; margin-bottom: 0.5rem;">Nama Lengkap:</label>
+                    <input type="text" id="input-nama" placeholder="Masukkan nama lengkap..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-md); font-family: inherit; font-size: 1rem;">
+                </div>
+                <div class="control-group mt-4">
+                    <label style="display: block; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">Kelas:</label>
+                    <input type="text" id="input-kelas" placeholder="Contoh: VII-A" style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-md); font-family: inherit; font-size: 1rem;">
+                </div>
+                <div id="identitas-error" style="color: var(--accent-red); margin-top: 10px; font-weight: bold; display: none;">Mohon lengkapi Nama dan Kelas terlebih dahulu!</div>
+                <button class="action-btn mt-4" style="width: 100%; justify-content: center;" onclick="mulaiKuis()">
+                    Mulai Kerjakan
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+
+            <div id="quiz-container" class="hidden">
+                <div class="flex justify-between mb-2 font-bold text-sm" style="color: var(--primary-dark);">
+                    <span id="quiz-counter">Soal 1 dari 5</span>
+                    <span id="quiz-score-display">Skor: 0</span>
+                </div>
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill" id="quiz-progress"></div>
+                </div>
+
+                <div style="background: var(--bg-color); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--primary-light); margin-bottom: 1.5rem;">
+                    <h3 id="question-text" style="margin-bottom: 1.5rem;">Pertanyaan muncul di sini</h3>
+                    <div id="options-container">
+                        <!-- Opsi digenerate via JS -->
+                    </div>
+                </div>
+
+                <!-- Alert Pembahasan -->
+                <div id="explanation-box" class="hidden" style="background: var(--white); padding: 1rem; border-radius: var(--radius-md); border-left: 5px solid var(--accent-blue); margin-bottom: 1.5rem; box-shadow: var(--shadow);">
+                    <strong style="color: var(--accent-blue); display: flex; align-items: center; gap: 5px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        Pembahasan:
+                    </strong>
+                    <p id="explanation-text" style="margin: 5px 0 0 0; font-size: 0.95rem;"></p>
+                </div>
+
+                <div class="text-center">
+                    <button id="next-btn" class="action-btn hidden" onclick="nextQuestion()">Pertanyaan Selanjutnya</button>
+                </div>
+            </div>
+
+            <!-- Layar Hasil Akhir -->
+            <div id="result-container" class="hidden text-center">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+                <h3>Kuis Selesai!</h3>
+                <p>Kamu telah menyelesaikan eksplorasi Himpunan Data.</p>
+                
+                <div style="background: var(--primary-light); display: inline-block; padding: 2rem 4rem; border-radius: var(--radius-lg); margin: 1.5rem 0;">
+                    <div style="font-size: 1rem; font-weight: bold; color: var(--primary-dark); text-transform: uppercase;">Skor Akhir</div>
+                    <div id="final-score" style="font-size: 4rem; font-weight: bold; color: var(--primary); line-height: 1;">100</div>
+                </div>
+                
+                <div>
+                    <button class="action-btn" onclick="switchTab('materi'); resetQuiz();">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.13 15.57a10 10 0 1 0 1.5-11L2 6"></path></svg>
+                        Ulangi Pembelajaran
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- 1. LOGIKA NAVIGASI ---
+        function toggleMenu() {
+            document.getElementById('main-nav').classList.toggle('show');
+        }
+
+        function switchTab(tabId) {
+            // Sembunyikan semua section
+            document.getElementById('sec-materi').classList.add('hidden');
+            document.getElementById('sec-eksplorasi').classList.add('hidden');
+            document.getElementById('sec-kuis').classList.add('hidden');
+            
+            // Hapus status aktif dari semua tombol
+            document.getElementById('btn-materi').classList.remove('active');
+            document.getElementById('btn-eksplorasi').classList.remove('active');
+            document.getElementById('btn-kuis').classList.remove('active');
+            
+            // Tampilkan section terpilih dan set tombol aktif
+            document.getElementById('sec-' + tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+            
+            // Tutup menu mobile jika terbuka
+            document.getElementById('main-nav').classList.remove('show');
+        }
+
+        // --- 2. LOGIKA EKSPLORASI DATA ---
+        // Dataset Utama (Konteks Gorontalo)
+        const rawData = [
+            { id: 1, wilayah: "Kab. Bone Bolango", luas: 10.5, panen: 120, unggul: true },
+            { id: 2, wilayah: "Kab. Gorontalo", luas: 22.0, panen: 255, unggul: true },
+            { id: 3, wilayah: "Kota Gorontalo", luas: 5.2, panen: 45, unggul: false },
+            { id: 4, wilayah: "Kab. Pohuwato", luas: 15.8, panen: 180, unggul: true },
+            { id: 5, wilayah: "Kab. Gorontalo Utara", luas: 18.5, panen: 190, unggul: false }
+        ];
+
+        let currentData = [...rawData]; // Data yang ditampilkan (setelah filter/sort)
+        let sortCol = null;
+        let sortAsc = true;
+
+        // Referensi elemen UI
+        const tbody = document.getElementById('table-body');
+        const filterPanen = document.getElementById('filter-panen');
+        const valPanen = document.getElementById('panen-val');
+        const filterUnggul = document.getElementById('filter-unggulan');
+        const feedbackText = document.getElementById('feedback-text');
+
+        // Fungsi Render Tabel
+        function renderTable() {
+            tbody.innerHTML = '';
+            
+            if(currentData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color: var(--accent-red);">Tidak ada data yang cocok dengan filter saat ini.</td></tr>`;
+                return;
+            }
+
+            currentData.forEach(row => {
+                const tr = document.createElement('tr');
+                
+                const boolHtml = row.unggul 
+                    ? `<span class="bool-true">True</span>` 
+                    : `<span class="bool-false">False</span>`;
+
+                tr.innerHTML = `
+                    <td>${row.id}</td>
+                    <td>${row.wilayah}</td>
+                    <td>${row.luas.toFixed(1)}</td>
+                    <td>${row.panen}</td>
+                    <td>${boolHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Fungsi Sorting (Pengurutan)
+        function handleSort(column, dataType) {
+            // Tentukan arah sorting
+            if (sortCol === column) {
+                sortAsc = !sortAsc; // Toggle arah jika kolom sama
+            } else {
+                sortCol = column;
+                sortAsc = true; // Default naik jika kolom baru
+            }
+
+            // Proses Sorting
+            currentData.sort((a, b) => {
+                let valA = a[column];
+                let valB = b[column];
+                
+                // Menangani string agar case-insensitive
+                if (dataType === 'String') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                }
+
+                if (valA < valB) return sortAsc ? -1 : 1;
+                if (valA > valB) return sortAsc ? 1 : -1;
+                return 0;
+            });
+
+            renderTable();
+            
+            // Update Feedback
+            const arahStr = sortAsc ? "Menaik (Kecil ke Besar / A-Z)" : "Menurun (Besar ke Kecil / Z-A)";
+            feedbackText.innerHTML = `Kamu melakukan <strong>Pengurutan (Sorting)</strong> pada kolom <strong>${column.toUpperCase()}</strong> (Tipe: ${dataType}) secara ${arahStr}.`;
+        }
+
+        // Fungsi Filtering (Penyaringan)
+        function applyFilter() {
+            const minLuas = parseFloat(filterPanen.value);
+            const mustUnggul = filterUnggul.checked;
+            
+            valPanen.innerText = minLuas.toFixed(1);
+
+            currentData = rawData.filter(row => {
+                const passLuas = row.luas >= minLuas;
+                const passUnggul = mustUnggul ? (row.unggul === true) : true;
+                return passLuas && passUnggul;
+            });
+
+            renderTable();
+
+            // Update Feedback
+            if(minLuas > 0 || mustUnggul) {
+                let msg = `Kamu melakukan <strong>Penyaringan (Filtering)</strong>: Menampilkan data `;
+                if(minLuas > 0) msg += `dengan Luas (Float) >= ${minLuas} Ha `;
+                if(minLuas > 0 && mustUnggul) msg += `dan `;
+                if(mustUnggul) msg += `bertipe unggul (Boolean = True).`;
+                msg += ` Ditemukan ${currentData.length} baris.`;
+                feedbackText.innerHTML = msg;
+            } else {
+                feedbackText.innerHTML = "Tabel menampilkan seluruh data asli (5 baris).";
+            }
+        }
+
+        function resetData() {
+            filterPanen.value = 0;
+            valPanen.innerText = "0";
+            filterUnggul.checked = false;
+            sortCol = null;
+            currentData = [...rawData];
+            renderTable();
+            feedbackText.innerHTML = "Data berhasil dikembalikan ke kondisi awal tanpa pengurutan maupun penyaringan.";
+        }
+
+        // Event Listener untuk input filter
+        filterPanen.addEventListener('input', applyFilter);
+        filterUnggul.addEventListener('change', applyFilter);
+
+        // --- 3. LOGIKA KUIS EVALUASI ---
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyeOddI3T6rZNCCOhVqHGqpeRcQAyUqpVXamW5dkJNXz7ZWlc9cItiqU1ii2ACCj-l8Pg/exec";
+
+        const soalKuis = [
+            {
+                q: "Pada tabel himpunan data, apa sebutan untuk sekumpulan informasi yang membentang mendatar (kiri ke kanan) yang mewakili satu kesatuan data utuh?",
+                options: ["Kolom (Field)", "Baris (Record)", "Sel (Cell)", "Tipe Data"],
+                correct: 1,
+                explanation: "Baris (Record) menyajikan data mendatar yang merupakan satu kesatuan utuh, misalnya seluruh informasi tentang 1 Kabupaten."
+            },
+            {
+                q: "Kolom 'Wilayah MTs' berisi teks nama-nama daerah seperti 'Kab. Gorontalo'. Tipe data apa yang paling tepat untuk kolom ini?",
+                options: ["Integer", "Float", "Boolean", "String"],
+                correct: 3,
+                explanation: "String adalah tipe data yang digunakan untuk menyimpan teks (kumpulan karakter/huruf)."
+            },
+            {
+                q: "Sebuah program madrasah mengharuskan lahan jagung yang dianalisis harus lebih dari 10.5 Hektar. Angka 10.5 termasuk ke dalam tipe data...",
+                options: ["Integer (Bilangan Bulat)", "String (Teks)", "Float / Real (Bilangan Desimal)", "Boolean (Logika)"],
+                correct: 2,
+                explanation: "Karena memiliki nilai pecahan atau koma (10.5), maka tipe datanya adalah Float (Bilangan Desimal)."
+            },
+            {
+                q: "Jika kamu mengurutkan (Sorting) tabel berdasarkan Kolom 'Panen (Karung)' secara MENURUN (Descending), maka data yang muncul paling atas adalah...",
+                options: [
+                    "Data dengan nama wilayah berawalan huruf Z",
+                    "Data dengan panen karung paling sedikit (terkecil)",
+                    "Data dengan panen karung paling banyak (terbesar)",
+                    "Data yang nilai Booleannya False"
+                ],
+                correct: 2,
+                explanation: "Pengurutan Menurun (Descending) pada data angka berarti mengurutkan dari nilai yang paling besar hingga ke yang paling kecil."
+            },
+            {
+                q: "Proses menyembunyikan data yang tidak memenuhi syarat tertentu (misalnya: hanya menampilkan yang Boolean = True) disebut proses...",
+                options: ["Filtering (Penyaringan)", "Sorting (Pengurutan)", "Deleting (Penghapusan)", "Formatting (Pemformatan)"],
+                correct: 0,
+                explanation: "Filtering atau penyaringan adalah proses memilih baris data yang ingin ditampilkan berdasarkan kondisi tertentu."
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let answered = false;
+        
+        // Menambahkan state untuk identitas dan pelacakan jawaban
+        let userAnswers = [];
+        let dataSiswa = { nama: "", kelas: "" };
+
+        const elQText = document.getElementById('question-text');
+        const elOptions = document.getElementById('options-container');
+        const elCounter = document.getElementById('quiz-counter');
+        const elProgress = document.getElementById('quiz-progress');
+        const elExpBox = document.getElementById('explanation-box');
+        const elExpText = document.getElementById('explanation-text');
+        const btnNext = document.getElementById('next-btn');
+        const scoreDisplay = document.getElementById('quiz-score-display');
+        
+        // Container UI
+        const elIdentitas = document.getElementById('identitas-container');
+        const elQuiz = document.getElementById('quiz-container');
+
+        function mulaiKuis() {
+            const nama = document.getElementById('input-nama').value.trim();
+            const kelas = document.getElementById('input-kelas').value.trim();
+
+            if (!nama || !kelas) {
+                document.getElementById('identitas-error').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('identitas-error').style.display = 'none';
+            dataSiswa.nama = nama;
+            dataSiswa.kelas = kelas;
+            
+            elIdentitas.classList.add('hidden');
+            elQuiz.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            const q = soalKuis[currentQ];
+            elQText.innerText = q.q;
+            elCounter.innerText = `Soal ${currentQ + 1} dari ${soalKuis.length}`;
+            elProgress.style.width = `${((currentQ) / soalKuis.length) * 100}%`;
+            
+            elExpBox.classList.add('hidden');
+            btnNext.classList.add('hidden');
+            elOptions.innerHTML = '';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                elOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(indexSelected, btnElement) {
+            if(answered) return;
+            answered = true;
+            
+            const q = soalKuis[currentQ];
+            const isCorrect = (indexSelected === q.correct);
+            const allBtns = elOptions.querySelectorAll('button');
+            
+            // Simpan riwayat jawaban untuk dikirim ke Database Server
+            userAnswers.push({
+                isCorrect: isCorrect,
+                jawabanSiswa: q.options[indexSelected]
+            });
+
+            // Disable all & highlight answers
+            allBtns.forEach((btn, idx) => {
+                btn.disabled = true;
+                if(idx === q.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === indexSelected && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if(isCorrect) {
+                score += 20; // 5 soal * 20 = 100
+                scoreDisplay.innerText = `Skor: ${score}`;
+            }
+
+            // Show explanation
+            elExpText.innerText = q.explanation;
+            elExpBox.classList.remove('hidden');
+            btnNext.classList.remove('hidden');
+            
+            if(currentQ === soalKuis.length - 1) {
+                btnNext.innerText = "Lihat Hasil Akhir";
+            }
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if(currentQ < soalKuis.length) {
+                loadQuestion();
+            } else {
+                submitDataAndShowResult();
+            }
+        }
+
+        async function submitDataAndShowResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.classList.remove('hidden');
+            elProgress.style.width = `100%`;
+            
+            const finalScoreEl = document.getElementById('final-score');
+            finalScoreEl.innerHTML = '<span style="font-size: 1.5rem; color: var(--primary);">Menyimpan...</span>';
+
+            // Merakit payload data yang akan dikirim ke Backend Google Apps Script
+            const payload = {
+                nama: dataSiswa.nama,
+                kelas: dataSiswa.kelas,
+                skor: score,
+                benar: userAnswers.filter(a => a.isCorrect).length,
+                salah: userAnswers.filter(a => !a.isCorrect).length,
+                jawaban: userAnswers
+            };
+
+            try {
+                if(GAS_URL !== "URL_WEB_APP_APPS_SCRIPT_ANDA_DISINI") {
+                    await fetch(GAS_URL, {
+                        method: "POST",
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    console.warn("Peringatan: URL Web App (GAS_URL) belum diatur! Data hanya tampil lokal.");
+                }
+            } catch (error) {
+                console.error("Gagal terhubung ke database:", error);
+            }
+
+            // Tampilkan hasil akhir
+            finalScoreEl.innerText = score;
+        }
+
+        function showResult() {
+            // Fungsi ini sengaja diabaikan karena logika berpindah ke submitDataAndShowResult
+        }
+
+        function resetQuiz() {
+            currentQ = 0;
+            score = 0;
+            userAnswers = [];
+            scoreDisplay.innerText = `Skor: 0`;
+            
+            // Tampilkan kembali form identitas
+            document.getElementById('result-container').classList.add('hidden');
+            document.getElementById('identitas-container').classList.remove('hidden');
+            document.getElementById('input-nama').value = '';
+            document.getElementById('input-kelas').value = '';
+        }
+
+        // --- Inisialisasi Saat Halaman Dimuat ---
+        window.onload = () => {
+            renderTable(); // Render tabel eksplorasi awal
+            // Penghapusan fungsi loadQuestion() agar siswa wajib mengisi form Identitas dahulu
+        };
+    </script>
+</body>
+</html>
